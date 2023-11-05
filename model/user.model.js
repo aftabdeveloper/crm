@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import bcrypt from "bcrypt"
+import Company from "./company.model"
 const{Schema} = mongoose
 
 const userSchema = new Schema({

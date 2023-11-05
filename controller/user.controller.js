@@ -2,8 +2,25 @@ import "@/modules/db"
 import User from "@/model/user.model"
 
 export const fetch = async (req,res)=>{
-    const user = await User.find()
+    const user = await User.find(req.query)
     res.status(200).json(user)
+}
+
+export const fetchById = async (req,res)=>{
+    try
+    {
+       let user = null
+       if(req.query.populate === "true")
+       user = await User.findById(req.query.id).populate("company")
+       else
+       user = await User.findById(req.query.id)
+       res.status(200).json(user)
+    }
+    catch(err)
+    {
+       res.status(500).json({message: err.message}) 
+    }
+    
 }
 
 export const create = async (req,res)=>{
