@@ -2,7 +2,8 @@ import "@/modules/db"
 import User from "@/model/user.model"
 
 export const fetch = async (req,res)=>{
-    const user = await User.find(req.query)
+    const user = await User.findOne(req.query)
+    if(!user) return res.status(404).json({err: "User doesn't exist"})
     res.status(200).json(user)
 }
 

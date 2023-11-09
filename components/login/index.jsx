@@ -1,12 +1,24 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, message } from 'antd';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import axios from "axios";
+const http = axios.create({
+  withCredentials: true
+})
+
 const Login = () => {
 const router = useRouter();
-const onFinish = (values) => {
-console.log('Received values of form: ', values);
-router.push('/admin');
+const onFinish = async (values) => {
+try
+{
+  await axios.post("/api/auth/login",values)
+  router.push('/admin');
+}
+catch(err)
+{
+  message.error(err.message)
+}
 
 };
   return (
@@ -20,7 +32,7 @@ router.push('/admin');
       onFinish={onFinish}
     >
       <Form.Item
-        name="username"
+        name="email"
         rules={[
           {
             required: true,
