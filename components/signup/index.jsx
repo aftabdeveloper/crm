@@ -3,6 +3,7 @@ import { Button, Form, Input, InputNumber,Slider, message,Spin } from 'antd';
 import { useState , useEffect ,useCallback, useRef } from 'react';
 import axios from "axios";
 import Link from 'next/link';
+import {useRouter} from "next/router"
 const layout = {
   labelCol: {
     span: 8,
@@ -19,12 +20,16 @@ const layout = {
 const Signup = ()=>{
   
 const [form] = Form.useForm();
-
+const router = useRouter()
+const http = axios.create({
+  withCredentials: true
+})
 const onFinish = async (values) => {
   try
   {
    await axios.post("/api/auth/signup",values)
    message.success("Registration success!")
+   router.push("/admin")
   }
   catch(err)
   {

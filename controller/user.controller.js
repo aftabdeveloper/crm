@@ -27,6 +27,7 @@ export const create = async (req,res)=>{
     try{
         const user = new User(req.body)
         await user.save()
+        user.password = undefined
         res.status(200).json(user)
     }
     catch(err)
