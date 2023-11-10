@@ -20,6 +20,7 @@ const layout = {
 const Signup = ()=>{
   
 const [form] = Form.useForm();
+const[loading,setLoading] = useState(false)
 const router = useRouter()
 const http = axios.create({
   withCredentials: true
@@ -27,6 +28,7 @@ const http = axios.create({
 const onFinish = async (values) => {
   try
   {
+   setLoading(!loading)
    await axios.post("/api/auth/signup",values)
    message.success("Registration success!")
    router.push("/admin")
@@ -37,6 +39,7 @@ const onFinish = async (values) => {
   }
   finally{
     form.resetFields();
+    setLoading(!loading)
   }
 
 };
@@ -137,7 +140,7 @@ const onFinish = async (values) => {
         offset: 8,
       }}
     >
-      <Button className='bg-red-600 text-white hover:text-black ml-14 hover:bg-slate-50' htmlType="submit">
+      <Button loading={loading} className='bg-red-600 text-white hover:text-black ml-14 hover:bg-slate-50' htmlType="submit">
         Signup
       </Button>
     </Form.Item>

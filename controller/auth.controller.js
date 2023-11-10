@@ -60,3 +60,13 @@ export const login = async (req,res)=>{
     }
     
 }
+
+export const logout = (req,res)=>{
+        const cookieData = cookie.serialize("authToken","logout",{
+            httpOnly: true,
+            path: "/",
+            maxAge: 0
+        })
+        res.setHeader("Set-Cookie", cookieData)
+        res.status(200).json({success: true})
+}

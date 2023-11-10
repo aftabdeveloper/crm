@@ -9,17 +9,31 @@ import {
   BarChartOutlined,
   DashboardOutlined,
   MessageOutlined,
-  NotificationOutlined
-  
+  NotificationOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme ,Badge } from 'antd';
+import axios from 'axios';
+import { Layout, Menu, Button, theme ,Badge, message } from 'antd';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 const { Header, Sider, Content } = Layout;
-const Admin = ({ children }) => {
+const Admin = ({ children, session }) => {
+  const router = useRouter()
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const logout = async ()=>{
+    try
+    {
+      await axios.post("/api/auth/logout")   
+      router.push("/login")   
+    }
+    catch(err)
+    {
+      message.error("Unable to logout please try again after some time")
+    }
+  }
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed} className='h-screen'>
@@ -57,7 +71,7 @@ const Admin = ({ children }) => {
           }}
           className='flex justify-between p-20'
         >
-      <div className='flex '>
+      <div className='flex align-items'>
       <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -68,17 +82,11 @@ const Admin = ({ children }) => {
               height: 64,
             }}
           />
-          <h1> Dashboard</h1>
+          <h1 className='text-lg font-semibold capitalize'> {session && session.founder}</h1>
       </div>
 
       <div className='mr-10'>
-      <Badge size="small" count={5} >
-      <MessageOutlined />
-      </Badge>
-      <i className='bx bx-cog ml-4 mr-4 text-xl' ></i>
-      <Badge size="small" count={1} >
-      <NotificationOutlined />
-      </Badge>
+        <Button icon={<LogoutOutlined />} type="text" onClick={logout}/>
       </div>
         </Header>
         <Content

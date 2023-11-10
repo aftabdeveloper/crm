@@ -3,15 +3,19 @@ import { Button, Checkbox, Form, Input, message } from 'antd';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from "axios";
+import { useState } from 'react';
 const http = axios.create({
   withCredentials: true
 })
 
 const Login = () => {
-const router = useRouter();
+  const[loading,setLoading] = useState(false)
+  const router = useRouter();
+
 const onFinish = async (values) => {
 try
 {
+  setLoading(!loading)
   await axios.post("/api/auth/login",values)
   router.push('/admin');
 }
@@ -19,7 +23,10 @@ catch(err)
 {
   message.error(err.message)
 }
-
+finally
+{
+  setLoading(!loading)
+}
 };
   return (
     <div className='w-96 mx-auto my-16 border shadow-md rounded-md p-9'>
@@ -68,7 +75,7 @@ catch(err)
       </Form.Item>
 
       <Form.Item>
-        <Button  htmlType="submit" className="login-form-button hover:bg-white bg-orange-400">
+        <Button loading={loading} htmlType="submit" className="login-form-button hover:bg-white bg-orange-400">
           Log in
         </Button>
         Or <Link href="/signup">register now!</Link>
