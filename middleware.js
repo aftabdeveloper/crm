@@ -12,7 +12,13 @@ export const middleware = async (req)=>{
         const http = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/jwt/${value}`)
         if(http.status !== 200) return res.redirect(new URL('/login', req.url))
         const session = await http.json()
-        return res.next()
+        const header = res.next()
+        header.cookies.set({
+            name: "session",
+            value: JSON.stringify(session),
+            path: "/"
+        })
+        return header
     }
     catch(err)
     {

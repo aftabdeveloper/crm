@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -13,20 +13,30 @@ import {
   LogoutOutlined
 } from '@ant-design/icons';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 import { Layout, Menu, Button, theme ,Badge, message } from 'antd';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 const { Header, Sider, Content } = Layout;
-const Admin = ({ children, session }) => {
+const cookie = new Cookies()
+
+const Admin = ({ children }) => {
+  const[session,setSession] = useState(null)
   const router = useRouter()
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  useEffect(()=>{
+    const user = cookie.get("session")
+    setSession(user)
+  },[])
   const logout = async ()=>{
     try
     {
-      await axios.post("/api/auth/logout")   
+      await axios.post("/api/auth/logout")  
+      cookie.remove('session') 
       router.push("/login")   
     }
     catch(err)
